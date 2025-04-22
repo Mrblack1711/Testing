@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enkripsi dan Dekripsi Catatan</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: #00ff00;
+      font-family: monospace;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    h1, label {
+      color: #00ff00;
+    }
+
+    textarea, input {
+      background-color: #111;
+      color: #0f0;
+      border: 1px solid #0f0;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #222;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 5px 10px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    div {
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<h1>Enkripsi dan Dekripsi Catatan</h1>
+<div>
+  <label for="note">Catatan:</label>
+  <textarea id="note" rows="4"></textarea>
+</div>
+<div>
+  <label for="password">Password (acak jika kosong):</label>
+  <input type="text" id="password" placeholder="Masukkan password manual (optional)" />
+  <button onclick="generatePassword()">🔒 Generate Password</button>
+</div>
+<button onclick="encryptNote()">Enkripsi</button>
+<button onclick="decryptNote()">Dekripsi</button>
+
+<h2>Hasil:</h2>
+<div>
+  <label for="result">Catatan Enkripsi/Dekripsi:</label>
+  <textarea id="result" rows="4" readonly></textarea>
+</div>
+
+<script>
+  // Matrix effect
+  let canvas = document.getElementById("matrix");
+  let ctx = canvas.getContext("2d");
+
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+
+  let matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%";
+  matrix = matrix.split("");
+
+  let fontSize = 12;
+  let columns = canvas.width / fontSize;
+  let drops = [];
+
+  for (let x = 0; x < columns; x++) drops[x] = 1;
+
+  function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0F0";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      let text = matrix[Math.floor(Math.random() * matrix.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+
+  setInterval(draw, 35);
+
+  // Generate random password
+  function generatePassword(length = 16) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+    let pass = "";
+    for (let i = 0; i < length; i++) {
+      pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    document.getElementById("password").value = pass; // tampilkan password di input field
+    return pass;
+  }
+
+  // Encrypt
+  function encryptNote() {
+    let note = document.getElementById("note").value;
+    let password = document.getElementById("password").value;
+
+    if (note === "") return alert("Masukkan catatan!");
+
+    if (password === "") {
+      password = generatePassword(); // generate otomatis jika password kosong
+    }
+
+    let encryptedNote = CryptoJS.AES.encrypt(note, password).toString();
+    document.getElementById("result").value = encryptedNote;
+    document.getElementById("password").value = password; // tampilkan password yg dibuat di kolom password
+  }
+
+  // Decrypt
+  function decryptNote() {
+    let encryptedNote = document.getElementById("note").value;
+    let password = document.getElementById("password").value;
+
+    if (encryptedNote === "") return alert("Masukkan catatan terenkripsi!");
+
+    let bytes = CryptoJS.AES.decrypt(encryptedNote, password);
+    let decryptedNote = bytes.toString(CryptoJS.enc.Utf8);
+
+    if (decryptedNote === "") return alert("Password salah atau catatan rusak!");
+
+    document.getElementById("result").value = decryptedNote;
+  }
+</script>
+
+</body>
+</html>

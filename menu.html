@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Terakses</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #00ff00;
+            font-family: monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            opacity: 0; /* Mulai dari transparan */
+            animation: fadeIn 1s ease-in-out forwards; /* Animasi fade-in saat load */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #menu-container {
+            text-align: center;
+            transform: translateY(20px); /* Mulai sedikit di bawah */
+            opacity: 0;
+            animation: slideIn 1s ease-out 0.5s forwards; /* Animasi slide-in setelah 0.5s */
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: .15em solid #00ff00;
+            animation: typing 3s steps(20, end) 1.5s forwards, blink-caret .75s step-end infinite 1.5s forwards; /* Mulai setelah 1.5s */
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #00ff00; }
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out 2.5s forwards; /* Fade-in setelah 2.5s */
+        }
+
+        .menu-button {
+            background-color: #222;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 1em;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out 3s forwards, scaleUp 0.3s ease-in-out 3s forwards; /* Fade-in dan scale setelah 3s */
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        .menu-button:hover {
+            background-color: #0f0;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        /* Styling untuk kontainer adblock (mungkin tidak terlihat) */
+        #adblock-container {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            visibility: hidden;
+        }
+
+        #检测广告 {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu-container">
+        <h2>Selamat Datang, Intruder!</h2>
+        <p>Sistem berhasil ditembus. Pilih tindakan:</p>
+        <a href="enkripsicatatan.html" style="text-decoration: none;">
+            <button class="menu-button">Akses Catatan</button>
+        </a>
+        <button class="menu-button" onclick="alert('Menghubungkan ke Foto...')">Akses Foto</button>
+        <button class="menu-button" onclick="alert('Menghubungkan ke Video...')">Akses Video</button>
+        <a href="https://tv3.lk21official.cc/" style="text-decoration: none;">
+            <button class="menu-button">Indo Film</button>
+        </a>
+        <p style="font-size: 0.9em; margin-top: 30px;">Deskripsi: Antarmuka ini menyediakan akses ke berbagai sistem yang berhasil diakses. Gunakan dengan bijak.</p>
+    </div>
+
+    <div id="adblock-container">
+        <div id="检测广告" style="height: 1px;"></div>
+    </div>
+
+    <script>
+        // Fungsi sederhana untuk mendeteksi adblock (mungkin tidak akurat untuk semua adblocker)
+        function detectAdBlock() {
+            const ad = document.getElementById('检测广告');
+            if (ad && ad.offsetHeight === 0) {
+                alert('Terdeteksi AdBlock! Beberapa fitur mungkin tidak berfungsi dengan baik.');
+            }
+        }
+
+        // Panggil fungsi deteksi adblock saat halaman dimuat
+        window.onload = detectAdBlock;
+    </script>
+</body>
+</html>

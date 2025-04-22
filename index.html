@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akses Ditolak</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* Latar belakang hitam */
+            color: #00ff00; /* Teks hijau neon */
+            font-family: monospace;
+            display: flex;
+            flex-direction: column; /* Atur elemen jadi vertikal */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Biar scrollbar gak muncul */
+            opacity: 0; /* Mulai dari transparan */
+            animation: fadeIn 0.5s ease-in-out forwards; /* Fade-in cepat */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            text-align: center;
+            margin-bottom: 20px; /* Kasih jarak ke tombol */
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out 0.2s forwards; /* Fade-in sedikit delay */
+            z-index: 1; /* Biar di atas canvas */
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+
+        .blinking-cursor {
+            font-size: 1.5em;
+            color: #00ff00;
+            animation: blink 1s infinite step-end;
+        }
+
+        @keyframes blink {
+            from, to { color: transparent }
+            50% { color: #00ff00; }
+        }
+
+        #enter-button {
+            background-color: #222;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out 0.4s forwards, scaleUp 0.3s ease-in-out 0.4s forwards; /* Fade-in dan scale */
+            z-index: 1; /* Biar di atas canvas */
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        #enter-button:hover {
+            background-color: #0f0;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        #data-stream-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Di belakang elemen lain */
+        }
+    </style>
+</head>
+<body>
+    <canvas id="data-stream-canvas"></canvas>
+    <div class="container">
+        <h1>Akses Ditolak</h1>
+        <p>Mencoba mengakses sistem...</p>
+        <p><span class="blinking-cursor">_</span></p>
+    </div>
+    <button id="enter-button">Masuk</button>
+
+    <script>
+        const enterButton = document.getElementById('enter-button');
+
+        enterButton.addEventListener('click', () => {
+            window.location.href = 'menu.html';
+        });
+
+        // Efek Data Stream
+        const canvas = document.getElementById("data-stream-canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+
+        const lines = [];
+        const lineColor = '#0f0'; // Warna hijau neon untuk data stream (SUDAH DIUBAH)
+        const lineSpeed = 5;
+
+        function initLines() {
+            for (let i = 0; i < canvas.width / 20; i++) {
+                lines.push({
+                    x: i * 20,
+                    y: Math.random() * canvas.height,
+                    length: Math.random() * 50 + 10,
+                    speed: Math.random() * lineSpeed + 1
+                });
+            }
+        }
+
+        function drawLines() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; // Efek trail lebih lembut
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 2;
+
+            lines.forEach(line => {
+                ctx.beginPath();
+                ctx.moveTo(line.x, line.y);
+                ctx.lineTo(line.x, line.y + line.length);
+                ctx.stroke();
+                line.y += line.speed;
+                if (line.y > canvas.height) {
+                    line.y = -line.length;
+                }
+            });
+        }
+
+        initLines();
+        setInterval(drawLines, 30);
+    </script>
+</body>
+</html>
